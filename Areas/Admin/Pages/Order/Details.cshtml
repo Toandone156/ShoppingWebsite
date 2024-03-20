@@ -1,0 +1,127 @@
+﻿@page
+@model ShoppingWebsite.Areas.Admin.Pages.Order.DetailsModel
+@{
+    ViewData["Title"] = "Order Details";
+}
+<h1 class="h3 mb-4 text-gray-800">
+    <a asp-page="Index" class="btn btn-secondary btn-icon-split mt-2">
+        <span class="icon text-white-50">
+            <i class="fas fa-backward"></i>
+        </span>
+        <span class="text font-weight-bold">Order List</span>
+    </a>
+</h1>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        Order Details
+    </div>
+    <div class="card-body row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="@Model.Order.OrderID"></label>
+                <input asp-for="@Model.Order.OrderID" class="form-control validate" disabled>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Order.Account.FullName"></label>
+                <textarea asp-for="@Model.Order.Account.FullName" class="form-control validate" rows="5" disabled></textarea>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Order.OrderDate"></label>
+                <input asp-for="@Model.Order.OrderDate" class="form-control validate" disabled>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Order.ShipAddress"></label>
+                <input asp-for="@Model.Order.ShipAddress" class="form-control validate" disabled>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Order.status"></label>
+                <input asp-for="@Model.Order.status" class="form-control validate" disabled>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="productTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Product name</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>Total</th>
+                    <th>@Model.Order.TotalAmount.ToString("N0") ₫</th>
+                    </tfoot>
+                    <tbody>
+                        @foreach (var item in Model.Order.Details)
+                        {
+                            <tr>
+                                <td scope="col">
+                                    @item.Product.ProductName
+                                </td>
+                                <td scope="col">
+                                    @item.UnitPrice.ToString("N0") ₫
+                                </td>
+                                <td scope="col">
+                                    @item.Quantity
+                                </td>
+                                <td scope="col">
+                                    @((item.UnitPrice * item.Quantity).ToString("N0")) ₫
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        @if(Model.Order.status < Models.OrderStatus.Done)
+        {
+            <div class="col-md-12 mt-2">
+                <a href="javascript:void(0)" class="btn btn-primary btn-block mt-3 btn-update-status">Update status</a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#productTable').DataTable({
+                lengthMenu: [
+                    [5, 10, -1],
+                    [5, 10, 'All'],
+                ],
+                searching: false,
+                ordering: false
+            });
+        });
+
+        $(".btn-update-status").click(e => {
+            let id = $("#Order_OrderID")[0].value;
+
+            $.ajax({
+                url: '/api/order/updatestatus',
+                type: 'POST',
+                data: `{ "id": ${id} }`,
+                contentType: "application/json",
+                success: function (response) {
+                    debugger
+                    if (response) {
+                        showToast("Update status successfully!");
+                        $("#Order_status")[0].value = response;
+                    } else {
+                        showToast("Can not update status!");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    showToast("Call api fail!");
+                }
+            });
+        });
+    </script>
+}

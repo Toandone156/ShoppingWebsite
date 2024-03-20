@@ -1,0 +1,96 @@
+﻿@page
+@model ShoppingWebsite.Areas.Admin.Pages.Product.IndexModel
+@{
+    ViewData["Title"] = "Product List";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between">
+        <div class="h6 font-weight-bold text-primary align-self-center">Product Management</div>
+        <a asp-page="Create" class="btn btn-success btn-icon-split mt-2">
+            <span class="text">Create</span>
+            <span class="icon text-white-50">
+                <i class="fas fa-plus"></i>
+            </span>
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Product[0].ProductName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Product[0].UnitPrice)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Product[0].Category.Name)
+                        </th>
+                        <th>
+                            Available
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Product)
+                    {
+                        <tr class="item">
+                            <td scope="col">
+                                <a asp-page="Edit" asp-route-id="@item.ProductID"
+                                   class="font-weight-bold">
+                                    @Html.DisplayFor(modelItem => item.ProductName)
+                                </a>
+                            </td>
+                            <td scope="col">
+                                @item.UnitPrice.ToString("N0") ₫
+                            </td>
+                            <td scope="col">
+                                @(item.Category?.Name ?? "")
+                            </td>
+                            <td class="text-center">
+                                <button class="tm-product-delete-link btn btn-circle btn-secondary"
+                                        title="Change stock" onclick="updateStock(@item.ProductID, this);">
+                                    <i class="tm-product-delete-icon far @(item.IsAvailable ? "fa-eye" : "fa-eye-slash")"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        function updateStock(productId, clickedItem) {
+            $.ajax({
+                url: '/api/product/changeavailable',
+                type: 'POST',
+                data: `{ "id": ${productId} }`,
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.status) {
+                        var row = clickedItem.closest(".item");
+
+                        console.log(response);
+
+                        row.querySelector(".tm-product-delete-icon").className = response.stockValue ?
+                            "tm-product-delete-icon far fa-eye" :
+                            "tm-product-delete-icon far fa-eye-slash";
+
+                        showToast("Change available successfully!");
+                        row.setAttribute("data-stock", response.stockValue);
+                    } else {
+                        showToast("Can not change available!");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    showToast("Call api fail!");
+                }
+            });
+        }
+    </script>
+}

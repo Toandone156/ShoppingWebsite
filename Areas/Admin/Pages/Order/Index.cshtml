@@ -1,0 +1,91 @@
+﻿@page "{handler?}"
+@model ShoppingWebsite.Areas.Admin.Pages.Order.IndexModel
+@{
+    ViewData["Title"] = "Order List";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-column flex-md-row justify-content-between ">
+        <h6 class="align-self-center m-0 font-weight-bold text-primary"> Orders List</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Order[0].OrderID)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Order[0].Account.FullName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Order[0].OrderDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Order[0].ShipAddress)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Order[0].status)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="data-container">
+                    @foreach (var item in Model.Order)
+                    {
+                        <tr class="item">
+                            <td>
+                                <a asp-page="Details" asp-route-id="@item.OrderID"
+                                   class="font-weight-bold">
+                                    @Html.DisplayFor(modelItem => item.OrderID)
+                                </a>
+                            </td>
+                            <td scope="col">
+                                @Html.DisplayFor(modelItem => item.Account.FullName)
+                            </td>
+                            <td scope="col">
+                                @item.OrderDate.ToString("dd/MM/yyyy hh:mm:ss")
+                            </td>
+                            <td scope="col">
+                                @Html.DisplayFor(modelItem => item.ShipAddress)
+                            </td>
+                            <td scope="col">
+                                @item.status.ToString()
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // var connection = new signalR.HubConnectionBuilder()
+        //     .withUrl("/noti")
+        //     .build();
+
+        // connection.start().then(function () {
+        //     console.log("Connect signalr success");
+        //     connection.invoke("JoinRoom");
+        // })
+
+        // connection.on("UpdateOrder", () => {
+
+        //     if (window.location.href.includes("billhistory")) {
+        //         var container = $("#dataTable")[0];
+
+        //         $.ajax({
+        //             url: '/admin/order/index?handler=ListOrders',
+        //             contentType: 'application/html ; charset:utf-8',
+        //             type: 'GET',
+        //             dataType: 'html',
+        //             success: function (result) { container.innerHTML = result }
+        //         });
+        //     }
+
+        //     showToast("Nhận được đơn hàng mới!");
+        // })
+    </script>
+}

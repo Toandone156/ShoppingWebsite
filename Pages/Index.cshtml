@@ -1,0 +1,95 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<!-- Hero Section Begin -->
+<section class="hero">
+    <div class="hero__slider owl-carousel">
+        <div class="hero__item set-bg" data-setbg="/img/shop/bg_dalon.jpg">
+            <div class="container">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="hero__text">
+                            <h2>Making your life sweeter one bite at a time!</h2>
+                            <a href="shop.html" class="primary-btn">Our cakes</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero__item set-bg" data-setbg="img/shop/bg_tam.jpg">
+            <div class="container">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="hero__text">
+                            <h2>Making your life sweeter one bite at a time!</h2>
+                            <a href="shop.html" class="primary-btn">Our cakes</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero__item set-bg" data-setbg="img/shop/bg_xuxe.jpg">
+            <div class="container">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="hero__text">
+                            <h2>Making your life sweeter one bite at a time!</h2>
+                            <a href="shop.html" class="primary-btn">Our cakes</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Hero Section End -->
+<!-- About Section Begin -->
+<section class="about spad related-products">
+    <div class="container">
+        <div class="row" style="margin-bottom: 50px;">
+            <div class="about__text">
+                <div class="section-title">
+                    <h2>Bánh hương vị nhà làm</h2>
+                </div>
+                <p style="font-weight: bolder;color: #f08632;">Bánh hương vị nhà làm thủ công, bảo đảm vệ sinh an toàn thực phẩm.</p>
+            </div>
+        </div>
+        <div class="row related-products">
+            <div class="related__products__slider owl-carousel">
+                @foreach(var item in Model.Product)
+                {
+                    <div class="col-lg-3">
+                        <div class="product__item" data-product-id="@item.ProductID">
+                            <div class="product__item__pic set-bg" data-setbg="@item.ProductImage">
+                            </div>
+                            <div class="product__item__text">
+                                <h6>@item.ProductName</h6>
+                                <div class="product__item__price">@item.UnitPrice.ToString("N0") đ</div>
+                                <div class="cart_add">
+                                    <a @(item.IsAvailable ? "href=javascript:void(0) onclick=addToCart(event);" : "")>@(item.IsAvailable ? "Thêm giỏ hàng" : "Hết hàng")</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+<!-- About Section End -->
+
+@section Scripts {
+    <script>
+        function addToCart(e) {
+            debugger
+            e.preventDefault();
+            var id = e.target.closest(".product__item").getAttribute("data-product-id");
+            updateCartAjax(id, 1, (message) => {
+                showToast(message);
+            })
+        }
+    </script>
+}

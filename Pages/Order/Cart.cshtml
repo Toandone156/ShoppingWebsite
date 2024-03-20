@@ -1,0 +1,153 @@
+﻿@page "{handler?}"
+@model ShoppingWebsite.Pages.Order.CartModel
+@{
+    var total = Int32.Parse(ViewData["Total"]?.ToString() ?? "0");
+    ViewData["Title"] = "Cart";
+}
+
+<!-- Breadcrumb Begin -->
+<div class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="breadcrumb__text">
+                    <h2>Giỏ hàng</h2>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="breadcrumb__links">
+                    <a href="./index">Trang chủ</a>
+                    <span>Giỏ hàng</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+<!-- Shopping Cart Section Begin -->
+<section class="shopping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="shopping__cart__table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th>Số lượng</th>
+                                <th>Giá</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if(Model.Cart.Count <= 0)
+                            {
+                                <tr><td>Giỏ hàng trống!</td></tr>
+                            }
+                            else
+                            {
+                                @foreach (var item in Model.Cart)
+                                {
+                                <tr>
+                                    <td class="product__cart__item" data-product-id="@item.ProductID">
+                                        <div class="product__cart__item__pic w-75">
+                                            <img style="width: 70%;" src="@item.Product.ProductImage" alt="">
+                                        </div>
+                                        <div class="product__cart__item__text">
+                                            <h6>@item.Product.ProductName</h6>
+                                            <h5>@item.Product.UnitPrice.ToString("N0")</h5>
+                                        </div>
+                                    </td>
+                                    <td class="quantity__item">
+                                        <div class="quantity">
+                                            <div class="pro-qty">
+                                                <input type="text" value="@item.Quantity">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="cart__price">@((item.UnitPrice * item.Quantity).ToString("N0"))</td>
+                                    <td class="cart__close"><span class="icon_close"></span></td>
+                                </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="continue__btn">
+                            <a href="./shop">Đặt thêm hàng</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="cart__total">
+                    <h6>Tổng đơn hàng</h6>
+                    <ul>
+                        <li>Tổng cộng: <span>@total.ToString("N0")</span></li>
+                    </ul>
+                    @if(Model.Cart.Count > 0)
+                    {
+                        <a href="/order/checkout" class="primary-btn">Thanh toán</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Shopping Cart Section End -->
+
+@section Scripts {
+    <script>
+        $(".inc.qtybtn").click(event => {
+            let element = event.target;
+            let id = element.closest("tr").querySelector(".product__cart__item").getAttribute("data-product-id");
+            let quantity = parseInt(element.parentElement.querySelector("input[type='text']").value) + 1;
+
+            updateCartAjax(id, quantity);
+
+            updatePrice(element.closest("tr"), quantity);
+        })
+
+        $(".dec.qtybtn").click(event => {
+            let element = event.target;
+            let id = element.closest("tr").querySelector(".product__cart__item").getAttribute("data-product-id");
+            let quantity = parseInt(element.parentElement.querySelector("input[type='text']").value) - 1;
+
+            updateCartAjax(id, quantity);
+
+            if (quantity == 0) {
+                element.closest("tr").remove();
+            }
+
+            updatePrice(element.closest("tr"), quantity);
+        })
+
+        function updatePrice(trElement, quantity){
+            if(quantity != 0){
+                var cartPrice = trElement.querySelector(".cart__price");
+                var price = parseInt(trElement.querySelector(".product__cart__item__text h5").textContent.replace(/,/g, ''))
+                //Update cart price
+
+                cartPrice.textContent = (price * quantity).toLocaleString("en-US");
+            }
+            
+            debugger
+            var cartTotal = $(".cart__total span");
+            var allPrices = $(".cart__price");
+
+            var sum = 0;
+            allPrices.each((index, element) => {
+                sum += parseInt(element.textContent.replace(/,/g, ''));
+            });
+
+            cartTotal[0].textContent = sum.toLocaleString("en-US");
+
+            if (sum == 0) {
+                $(".cart__total .primary-btn")[0].remove();
+                $(".shopping__cart__table tbody").append("<tr><td>Cart is empty</td></tr>");
+            }
+        }
+    </script>
+}

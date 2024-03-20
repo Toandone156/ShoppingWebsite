@@ -1,0 +1,51 @@
+﻿@page
+@model ShoppingWebsite.Pages.Order.PaymentModel
+@{
+    ViewData["Title"] = "Payment";
+    var id = User.Claims.First(c => c.Type == "Id").Value;
+}
+
+<div class="container d-flex flex-column justify-content-center align-items-center">
+    <div class="card mb-3" style="height: auto; width: auto;">
+        <div class="card-header text-center">
+            <h3>Chuyển khoản đơn hàng</h3>
+        </div>
+        <div class="card-body">
+            <p>Vui lòng quét QR để chuyển khoản. <b class="text-danger">Không sửa đổi thông tin chuyển khoản!</b></p>
+            <p class="text-danger miss text-center">Thanh toán còn thiếu <b class="miss-price">0 đ</b></p>
+            <img src="@Model.QRUrl"
+            alt="QR Code for Payment" class="qr-img img-fluid mx-auto d-block">
+            <div class="mt-3 text-center">
+                <p class="text-muted">**Hoặc**</p>
+                <a href="./cart" class="btn btn-secondary">Hủy bỏ thanh toán</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(".miss").hide();
+        var remainAmount = @Model.amount;
+
+        connection.on("ReceiveMoney", (message, amount) => {
+            showToast(`Hệ thống nhận được ${amount} đ`);
+
+            if (amount >= remainAmount) {
+                $(".miss").hide();
+                showToast("Thanh toán thành công!");
+                setTimeout(() => { window.location.href = "/order/placeorder" }, 3000);
+            }else{
+                remainAmount -= amount;
+                $(".miss-price")[0].textContent = `${remainAmount} đ`;
+                $(".miss").show();
+                $(".qr-img")[0].src = getQRLink(@Model.amount - amount);
+                showToast("Thanh toán chưa đủ tiền!");
+            }
+        })
+
+        function getQRLink(amount) {
+            return "https://img.vietqr.io/image/970422-7010115062002-compact.png?amount="+amount+"&addInfo=id@(id)&accountName=Pham%20The%20Toan";
+        }
+    </script>
+}

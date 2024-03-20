@@ -1,0 +1,50 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model List<Models.Order>
+@{
+}
+
+@foreach (var order in Model)
+{
+    <article class="card">
+        <div class="card-body">
+            <article class="card">
+                <div class="card-body row">
+                    <div class="col-md-8"> <strong><i class="fa fa-address-book-o"></i> @order.Account.FullName</strong> <br> <i class="fa fa-map-marker"></i> @order.ShipAddress <br> <i class="fa fa-phone"></i> @order.Phone </div>
+                    <div class="col-lg-4 d-none d-md-block text-right"><strong>Ngày đặt hàng: @order.OrderDate.ToString("dd/MM/yyyy")</strong></div>
+                    <div class="col-lg-4 d-md-none d-block"><strong>Ngày đặt hàng: @order.OrderDate.ToString("dd/MM/yyyy")</strong></div>
+                </div>
+            </article>
+            <div class="track">
+                <div class="step @(order.status >= Models.OrderStatus.Sent ? "active" : "")"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Xác nhận</span> </div>
+                <div class="step @(order.status >= Models.OrderStatus.Processing ? "active" : "")"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Đang xử lý</span> </div>
+                <div class="step @(order.status >= Models.OrderStatus.Shipping ? "active" : "")"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> Đang giao hàng </span> </div>
+                <div class="step @(order.status >= Models.OrderStatus.Done ? "active" : "")"> <span class="icon"> <i class="fa fa-check-circle"></i> </span> <span class="text">Hoàn thành</span> </div>
+            </div>
+            <hr>
+            <ul class="row">
+                @foreach (var detail in order.Details)
+                {
+                    <li class="col-md-4">
+                        <figure class="itemside mb-3">
+                            <div class="aside"><img src="@detail.Product.ProductImage" class="img-sm border"></div>
+                            <figcaption class="info align-self-center">
+                                <strong class="title">@detail.Product.ProductName</strong> <span class="text-muted">Số lượng: @detail.Quantity <br> @($"{detail.UnitPrice:N0} đ") </span>
+                            </figcaption>
+                        </figure>
+                    </li>
+                }
+            </ul>
+            <hr>
+            <div class="row">
+                <div class="col-md-6" style="text-align: center;">
+                    <strong>Tổng: @order.Details.Count sản phẩm</strong>
+                </div>
+                <div class="col-md-6" style="text-align: center;">
+                    <strong>Thành tiền: @($"{order.TotalAmount:N0} đ") </strong>
+                </div>
+            </div>
+        </div>
+    </article>
+}

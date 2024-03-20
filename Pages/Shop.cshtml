@@ -1,0 +1,131 @@
+﻿@page
+@model PrivacyModel
+@{
+    ViewData["Title"] = "Shop";
+}
+
+<!-- Breadcrumb Begin -->
+<div class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="breadcrumb__text">
+                    <h2>Bánh nhà làm</h2>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="breadcrumb__links">
+                    <a href="./index">Home</a>
+                    <span>Shop</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+<!-- Shop Section Begin -->
+<section class="shop spad">
+    <div class="container">
+        <div class="shop__option">
+            <div class="row">
+                <div class="col-lg-7 col-md-7">
+                    <div class="shop__option__search">
+                        <form action="#">
+                            <select asp-items="ViewBag.CategoryID">
+                                <option value="">Categories</option>
+                            </select>
+                            <input type="text" placeholder="Search">
+                            <button disabled style="cursor: default;"><i class="fa fa-search"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            @foreach(var item in Model.Products)
+            {
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="product__item" data-product-id="@item.ProductID" data-category-name="@item.Category.Name">
+                        <div class="product__item__pic set-bg" data-setbg="@item.ProductImage">
+                        </div>
+                        <div class="product__item__text">
+                            <h6>@item.ProductName</h6>
+                            <div class="product__item__price">@item.UnitPrice.ToString("N0")</div>
+                            <div class="cart_add">
+                                <a @(item.IsAvailable ? "href=javascript:void(0) class=add-to-cart-button" : "")>@(item.IsAvailable ? "Thêm giỏ hàng" : "Hết hàng")</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<!-- Shop Section End -->
+
+@section Scripts {
+    <script>
+        $('.add-to-cart-button').click(e => {
+            e.preventDefault();
+            var id = e.target.closest(".product__item").getAttribute("data-product-id");
+            updateCartAjax(id, 1, (message) => {
+                showToast(message);
+            })
+        });
+
+        const searchForm = $(".shop__option__search form");
+        const searchInput = searchForm.find("input[type='text']");
+        const selectCategory = searchForm.find(".nice-select .current");
+        const productItems = $(".product__item");
+
+        // Function to filter products
+        function filterProducts() {
+            const searchTerm = searchInput.val().toLowerCase().trim();
+            const selectedCategoryId = selectCategory.text().toLowerCase().trim();
+
+            if (searchTerm == undefined) {
+                searchTerm = "";
+            }
+
+            productItems.each(function () {
+                const productName = $(this).find("h6 a").text().toLowerCase().trim();
+
+                const categoryId = $(this).data("categoryName").toLowerCase().trim();
+
+                let visible = true;
+
+                // Check for search term match
+                if (searchTerm && !productName.includes(searchTerm)) {
+                    visible = false;
+                }
+
+                // Check for category match
+                if (selectedCategoryId != "categories" && selectedCategoryId != categoryId) {
+                    visible = false;
+                }
+
+                $(this).parent().css("display", visible ? "block" : "none");
+            });
+        }
+
+        // Event listeners
+        searchInput.on("keyup", filterProducts);
+
+        // Detect data changes using a MutationObserver
+        const observer = new MutationObserver((mutationsList) => {
+            for (const mutation of mutationsList) {
+                if (mutation.type === 'childList') {
+                    filterProducts();
+                }
+            }
+        });
+
+        observer.observe(selectCategory[0], {
+            childList: true,
+            subtree: true
+        });
+
+        // Initial filter for potentially pre-filled search or category
+        filterProducts();
+    </script>
+}

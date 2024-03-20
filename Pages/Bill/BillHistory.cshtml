@@ -1,0 +1,114 @@
+﻿@page "{handler?}"
+@model ShoppingWebsite.Pages.Bill.BillHistoryModel
+@{
+    ViewData["Title"] = "Bill History";
+}
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/css/orderHistory.css" />
+}
+
+<!-- Breadcrumb Begin -->
+<div class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="breadcrumb__text" style="margin-bottom: 50px;">
+                    <h2>Lịch sử đơn hàng</h2>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="breadcrumb__links">
+                    <a href="/index">Trang chủ</a>
+                    <span>Đơn hàng</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+
+
+<section class="container orderHistory">
+    <div class="container" id="bill-list">
+        @if(Model.MyOrders.Count <= 0)
+        {
+            <div class="d-flex justify-content-center align-items-center" style="height: 30vh;">
+                <h3>Chưa có đơn hàng nào được đặt. Đi đến <a href="/shop">Shop</a> để đặt hàng ngay!</h3>
+            </div>
+        }
+        else
+        {
+            @foreach (var order in Model.MyOrders)
+            {
+                <article class="card">
+                    <div class="card-body">
+                        <article class="card">
+                            <div class="card-body row">
+                                <div class="col-md-8"> <strong><i class="fa fa-address-book-o"></i> @order.Account.FullName</strong> <br> <i class="fa fa-map-marker"></i> @order.ShipAddress <br> <i class="fa fa-phone"></i> @order.Phone </div>
+                                <div class="col-lg-4 d-none d-md-block text-right"><strong>Ngày đặt hàng: @order.OrderDate.ToString("dd/MM/yyyy")</strong></div>
+                                <div class="col-lg-4 d-md-none d-block"><strong>Ngày đặt hàng: @order.OrderDate.ToString("dd/MM/yyyy")</strong></div>
+                            </div>
+                        </article>
+                        <div class="track">
+                            <div class="step @(order.status >= Models.OrderStatus.Sent ? "active" : "")"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Xác nhận</span> </div>
+                            <div class="step @(order.status >= Models.OrderStatus.Processing ? "active" : "")"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Đang xử lý</span> </div>
+                            <div class="step @(order.status >= Models.OrderStatus.Shipping ? "active" : "")"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> Đang giao hàng </span> </div>
+                            <div class="step @(order.status >= Models.OrderStatus.Done ? "active" : "")"> <span class="icon"> <i class="fa fa-check-circle"></i> </span> <span class="text">Hoàn thành</span> </div>
+                        </div>
+                        <hr>
+                        <ul class="row">
+                            @foreach(var detail in order.Details)
+                            {
+                                <li class="col-md-4">
+                                    <figure class="itemside mb-3">
+                                        <div class="aside"><img src="@detail.Product.ProductImage" class="img-sm border"></div>
+                                        <figcaption class="info align-self-center">
+                                            <strong class="title">@detail.Product.ProductName</strong> <span class="text-muted">Số lượng: @detail.Quantity <br> @($"{detail.UnitPrice:N0} đ") </span>
+                                        </figcaption>
+                                    </figure>
+                                </li>
+                            }
+                        </ul>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-6" style="text-align: center;">
+                                <strong>Tổng: @order.Details.Count sản phẩm</strong>
+                            </div>
+                            <div class="col-md-6" style="text-align: center;">
+                                <strong>Thành tiền: @($"{order.TotalAmount:N0} đ") </strong>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            }
+        }
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        var connection = new signalR.HubConnectionBuilder()
+            .withUrl("/noti")
+            .build();
+
+        connection.start().then(function () {
+            console.log("Connect signalr success");
+            connection.invoke("JoinRoom");
+        })
+
+        connection.on("UpdateStatus", () => {
+            var container = $("#bill-list")[0];
+
+            $.ajax({
+                url: '/Bill/BillHistory?handler=ListBills',
+                contentType: 'application/html ; charset:utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) { container.innerHTML = result }
+            });
+
+            showToast("Có đơn hàng được cập nhật trạng thái!");
+        })
+    </script>
+}

@@ -1,0 +1,112 @@
+﻿@page
+@model ShoppingWebsite.Areas.Admin.Pages.Product.EditModel
+@{
+    ViewData["Title"] = "Edit Product";
+}
+
+<h1 class="h3 mb-4 text-gray-800">
+    <a asp-page="Index" class="btn btn-secondary btn-icon-split mt-2">
+        <span class="icon text-white-50">
+            <i class="fas fa-backward"></i>
+        </span>
+        <span class="text font-weight-bold">Product Management</span>
+    </a>
+</h1>
+<section class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Product Details</h6>
+    </div>
+    <form asp-page="Edit" class="tm-edit-product-form" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-white"></div>
+        <input type="hidden" asp-for="@Model.Product.ProductID" />
+        <input type="hidden" asp-for="@Model.Product.ProductImage" />
+        <div class="card-body row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="@Model.Product.ProductName"></label>
+                    <input asp-for="@Model.Product.ProductName" class="form-control">
+                    <span asp-validation-for="@Model.Product.ProductName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.Product.UnitPrice"></label>
+                    <div class="input-group">
+                        <input asp-for="@Model.Product.UnitPrice" class="form-control validate">
+                        <div class="input-group-append">
+                            <span class="input-group-text"> VND </span>
+                        </div>
+                    </div>
+                    <span asp-validation-for="@Model.Product.UnitPrice" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.Product.CategoryID">Category</label>
+                    <select asp-for="@Model.Product.CategoryID"
+                            asp-items="@ViewBag.CategoryID"
+                            class="form-control"
+                            data-val="true"
+                            data-val-required="The Category field is required.">
+                        <option value="">Select new category</option>
+                    </select>
+                    <span asp-validation-for="@Model.Product.CategoryID" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="d-none d-md-block" style="opacity: 0;">Hidden</label>
+                    <input asp-for="@Model.Files" onchange="LoadFile(event)" hidden>
+                    <div class="border border-dark rounded text-center" style="border: 2.4px dotted!important;">
+                        @if (Model.Product.ProductImage == string.Empty)
+                        {
+                            <img class="d-inline-block" alt="" id="preview-img" style="max-height: 300px; object-fit: contain;">
+                            <label for="image-upload" id="preview-upload">
+                                <span class="text-dark">
+                                    <i class="fas fa-upload h1 py-3"></i>
+                                </span>
+                                <div class="py-3">
+                                    Select a image or drag here
+                                </div>
+                            </label>
+                        }
+                        else
+                        {
+                            <img src="@Model.Product.ProductImage" class="d-inline-block w-100" alt="" id="preview-img" style="max-height: 300px; object-fit: contain;">
+                        }
+                    </div>
+                    <label for="Files" class="mt-4 d-flex justify-content-between font-weight-bold btn btn-secondary btn-icon-split btn-block">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-upload"></i>
+                        </span>
+                        <span class="text w-100">Change product image</span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-12 mt-2">
+                <button type="submit" class="btn btn-warning font-weight-bold btn-block">Update</button>
+                <a href="#" data-toggle="modal" data-target="#deleteModal"
+                    class="btn btn-danger btn-block">Delete</a>
+            </div>
+        </div>
+    </form>
+</section>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete product</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Lay Off" below if you are ready to delete this product.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-danger" asp-page="Delete" asp-route-id="@Model.Product.ProductID">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/admin/js/upload-img.js"></script>
+}

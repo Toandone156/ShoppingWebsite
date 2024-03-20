@@ -1,0 +1,373 @@
+﻿@{
+    var IsAdmin = User.Identity.IsAuthenticated && User.Claims.First(c => c.Type == System.Security.Claims.ClaimTypes.Role).Value == "Staff";
+    var IsAuthen = User.Identity.IsAuthenticated;
+    var titleLowcase = ViewData["Title"]?.ToString().ToLower() ?? "No title";
+    var id = User.FindFirst("Id")?.Value ?? "0";
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Bánh da lợn, bánh tằm">
+    <meta name="keywords" content="Bánh, bánh da lợn, bánh tằm">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>@ViewData["Title"] - ShoppingWebsite</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/flaticon.css" type="text/css">
+    <link rel="stylesheet" href="~/css/barfiller.css" type="text/css">
+    <link rel="stylesheet" href="~/css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="~/css/nice-select.css" type="text/css">
+    <link rel="stylesheet" href="~/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="~/css/style.css" type="text/css">
+    <link rel="stylesheet" href="~/css/site.css" type="text/css">
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Offcanvas Menu Begin -->
+    <div class="offcanvas-menu-overlay"></div>
+    <div class="offcanvas-menu-wrapper">
+        <div class="offcanvas__logo">
+            <a href="/index"><img src="~/img/logo.png" alt=""></a>
+        </div>
+        <div id="mobile-menu-wrap"></div>
+        <div class="offcanvas__option">
+            <ul>
+                @if (IsAuthen)
+                {
+                    <li>
+                        @User.Identity.Name
+                    </li>
+                    <li><a href="/auth/logout">Đăng xuất</a></li>
+                    @if (IsAdmin)
+                    {
+                        <li>
+                            <a href="/admin">Tới trang admin</a>
+                        </li>
+                    }
+                }
+                else
+                {
+                    <li><a href="javascript:void(0)" class="login-btn">Đăng nhập</a></li>
+                    <li><a href="javascript:void(0)" class="register-btn">Đăng ký</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+    <!-- Offcanvas Menu End -->
+    <!-- Header Section Begin -->
+    <header class="header">
+        <div class="header__top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="header__top__inner">
+
+                            <div class="header__top__left">
+                                <ul>
+                                    @if (IsAuthen)
+                                    {
+                                        <li>
+                                            @User.Identity.Name
+                                        </li>
+                                        <li><a href="/auth/logout">Đăng xuất</a></li>
+                                        @if(IsAdmin){
+                                            <li>
+                                                <a href="/admin">Tới trang admin</a>
+                                            </li>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <li><a href="javascript:void(0)" class="login-btn">Đăng nhập</a></li>
+                                        <li><a href="javascript:void(0)" class="register-btn">Đăng ký</a></li>
+                                    }
+                                </ul>
+                            </div>
+
+                            <div class="header__logo">
+                                <a href="/index"><img src="~/img/logo.png" alt=""></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="canvas__open"><i class="fa fa-bars"></i></div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav class="header__menu mobile-menu">
+                        <ul>
+                            <li @(titleLowcase.Contains("home") ? "class=active" : "")><a href="/index">Trang chủ</a></li>
+                            <li @(titleLowcase.Contains("shop") ? "class=active" : "")><a href="/shop">Cửa hàng</a></li>
+                            @if(IsAuthen){
+                                <li @(titleLowcase.Contains("bill") ? "class=active" : "")><a href="/bill/billhistory">Đơn hàng</a></li>
+                            }
+                            <li @(titleLowcase.Contains("cart") ? "class=active" : "")>
+                                <div class="header__top__right__cart">
+                                    <a href="/order/cart">Giỏ hàng</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Header Section End -->
+    @RenderBody()
+    <!-- About Section End -->
+    <!-- Footer Section Begin -->
+    <footer class="footer set-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-sm-6">
+                    <div class="footer__widget">
+                        <h6>Thời gian làm việc</h6>
+                        <ul>
+                            <li>Monday - Friday: 12:00 pm – 05:30 pm</li>
+                            <li>Saturday: 10:00 am – 16:30 pm</li>
+                            <li>Sunday: 10:00 am – 16:30 pm</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-6">
+                    <div class="footer__about">
+                        <div class="footer__logo">
+                            <a href="#"><img src="~/img/footer-logo.png" alt=""></a>
+                        </div>
+                        <p>Bánh hương vị nhà làm, đặc biệt thơm ngon</p>
+                        <div class="footer__social">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-instagram"></i></a>
+                            <a href="#"><i class="fa fa-youtube-play"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-6">
+                    <div class="footer__widget none-border" style="padding-left: 50px; padding-bottom: 50px; border-right: none;">
+                        <h6>Thông tin liên hệ</h6>
+                        <ul>
+                            <li>Địa chỉ: FPT Plaza 2 - Đà Nẵng</li>
+                            <li>Liên hệ: 0362517785</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p class="copyright__text text-white text-center">
+                            Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved.</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    @* Login and Register *@
+    @if (!IsAuthen)
+    {
+        <div class="popup-login" id="login-form">
+            <div class="popup-login-container">
+                <div class="close-btn">
+                    <button class="close">
+                        <img src="~/img/close.png" width="24px" class="not-hover" />
+                        <img src="~/img/close-border.png" width="24px" class="hover" />
+                    </button>
+                </div>
+                <div class="popup-login-header">
+                    <h1>Đăng nhập</h1>
+                </div>
+                <div class="popup-login-body">
+                    <form id="login" action="/auth/login" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="login_email" name="Username" placeholder="Nhập username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Mật khẩu</label>
+                            <input type="password" id="login_password" name="Password" placeholder="Nhập mật khẩu" required>
+                        </div>
+                        <div class="form-group submit-btn">
+                            <button type="submit">Đăng nhập</button>
+                        </div>
+                    </form>
+                    <div class="popup-login-footer">
+                        <div class="divider">
+                            <hr>
+                            <span class="divider-text">Hoặc</span>
+                            <hr>
+                        </div>
+                        <div class="app-login">
+                            <a href="/auth/logingoogle">
+                                <img src="~/img/google.png" width="30px" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="popup-login-footer">
+                        Không có tài khoản?
+                        <a href="#" class="register-btn">Đăng ký</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="popup-login" id="register-form">
+            <div class="popup-login-container">
+                <div class="close-btn">
+                    <button class="close">
+                        <img src="~/img/close.png" width="24px" class="not-hover" />
+                        <img src="~/img/close-border.png" width="24px" class="hover" />
+                    </button>
+                </div>
+                <div class="popup-login-header">
+                    <h1>Đăng ký</h1>
+                </div>
+                <div class="popup-login-body">
+                    <form id="register" action="/auth/register" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="register_email" name="Username" placeholder="Nhập username">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Họ tên</label>
+                            <input type="text" id="register_name" name="Fullname" placeholder="Nhập họ tên">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Mật khẩu</label>
+                            <input type="password" id="register_password" name="Password" placeholder="Nhập mật khẩu">
+                        </div>
+                        <div class="form-group submit-btn">
+                            <button type="submit">Đăng ký</button>
+                        </div>
+                    </form>
+                    <div class="popup-login-footer">
+                        <div class="divider">
+                            <hr>
+                            <span class="divider-text">Hoặc</span>
+                            <hr>
+                        </div>
+                        <div class="app-login">
+                            <a href="/auth/logingoogle">
+                                <img src="~/img/google.png" width="30px" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="popup-login-footer">
+                        Đã có tài khoản?
+                        <a href="#" class="login-btn">Đăng nhập</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (IsAuthen)
+    {
+        <style>
+            .call-to-action {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background-color: #007bff;
+                color: #fff;
+                padding: 15px 20px; /* Adjust padding to fit icon */
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                display: flex; /* Center icon and text vertically */
+                align-items: center; /* Center icon and text horizontally */
+            }
+        </style>
+        <button class="call-to-action" onclick="callService()">
+            <i class="fa fa-phone"></i>
+        </button>
+    }
+
+
+    <!-- Footer Section End -->
+    <!-- Js Plugins -->
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.nice-select.min.js"></script>
+    <script src="~/js/jquery.barfiller.js"></script>
+    <script src="~/js/jquery.magnific-popup.min.js"></script>
+    <script src="~/js/jquery.slicknav.js"></script>
+    <script src="~/js/owl.carousel.min.js"></script>
+    <script src="~/js/jquery.nicescroll.min.js"></script>
+    <script src="~/js/main.js"></script>
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @if (TempData["Message"] != null)
+    {
+        <script>
+            showToast('@TempData["Message"]');
+        </script>
+    }
+
+    @if (IsAuthen)
+    {
+        <script>
+            var id = "@(id)";
+
+            function callService(){
+                connection.invoke("CallStaff", id);
+            }
+
+            connection.on("MakeCall", guid => {
+                var params = 'width=' + screen.width;
+                params += ', height=' + screen.height;
+                params += ', top=0, left=0'
+                params += ', fullscreen=yes';
+                params += ', directories=no';
+                params += ', location=no';
+                params += ', menubar=no';
+                params += ', resizable=no';
+                params += ', scrollbars=no';
+                params += ', status=no';
+                params += ', toolbar=no';
+
+                window.open(`/call/${guid}`, 'Calling', params);
+                console.log(guid);
+            });
+        </script>
+    }
+
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

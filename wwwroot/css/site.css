@@ -1,0 +1,165 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+/** login **/
+.popup-login {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    display: none;
+}
+
+.popup-login-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.popup-login-header {
+    padding: 20px;
+    text-align: center;
+    font-weight: bolder;
+}
+
+    .popup-login-header h1 {
+        font-size: 32px;
+        margin: 0 15%;
+        padding: 0;
+    }
+
+.popup-login-body {
+    padding: 20px;
+}
+
+    .popup-login-body form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .popup-login-body .form-group {
+        margin-bottom: 10px;
+    }
+
+        .popup-login-body .form-group label {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .popup-login-body .form-group input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        .popup-login-body .form-group button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+.popup-login-footer {
+    padding: 10px 20px;
+    text-align: center;
+}
+
+    .popup-login-footer p {
+        margin: 0;
+        font-size: 14px;
+    }
+
+    .popup-login-footer a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+.form-group.submit-btn {
+    text-align: center;
+    margin-top: 6px;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .divider hr {
+        width: 100%;
+        height: 1px;
+        border: none;
+        background-color: #ddd;
+    }
+
+.divider-text {
+    font-size: 16px;
+    color: #999;
+    font-weight: 500;
+    padding: 0 10px;
+    margin: 0 5px;
+}
+
+.app-login {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .app-login span {
+        padding: 5px 10px 0 10px;
+    }
+
+.popup-login-footer .redirect {
+    margin-left: 5px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    cursor: pointer;
+}
+
+    .close-btn .hover {
+        display: none;
+    }
+
+    .close-btn:hover .hover {
+        display: block;
+    }
+
+    .close-btn:hover .not-hover {
+        display: none;
+    }
+/** end login **/

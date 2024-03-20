@@ -1,0 +1,84 @@
+﻿@page
+@model ShoppingWebsite.Areas.Admin.Pages.Product.CreateModel
+@{
+    ViewData["Title"] = "Create Product";
+}
+<h1 class="h3 mb-4 text-gray-800">
+    <a asp-page="Index" class="btn btn-secondary btn-icon-split mt-2">
+        <span class="icon text-white-50">
+            <i class="fas fa-backward"></i>
+        </span>
+        <span class="text font-weight-bold">Product Management</span>
+    </a>
+</h1>
+<div class="card shadow mb-4">
+    <div class="card-header py-3 font-weight-bold">
+        Create Product
+    </div>
+
+    <form asp-page="Create" class="tm-edit-product-form" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-white"></div>
+        <div class="card-body row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="@Model.Product.ProductName"></label>
+                    <input asp-for="@Model.Product.ProductName" class="form-control">
+                    <span asp-validation-for="@Model.Product.ProductName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.Product.UnitPrice"></label>
+                    <div class="input-group">
+                        <input asp-for="@Model.Product.UnitPrice" class="form-control validate">
+                        <div class="input-group-append">
+                            <span class="input-group-text"> VND </span>
+                        </div>
+                    </div>
+                    <span asp-validation-for="@Model.Product.UnitPrice" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.Product.CategoryID">Category</label>
+                    <select asp-for="@Model.Product.CategoryID"
+                            asp-items="ViewBag.CategoryID"
+                            class="form-control"
+                            data-val="true"
+                            data-val-required="The Category field is required.">
+                        <option value="">Select category</option>
+                    </select>
+                    <span asp-validation-for="@Model.Product.CategoryID" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group h-50">
+                    <label class="d-none d-md-block" style="opacity: 0;">Hidden</label>
+                    <input class="form-control" asp-for="@Model.Files" multiple="false" accept="image/*" onchange="LoadFile(event)" hidden>
+                    <div class="border border-dark rounded text-center" style="border: 2.4px dotted!important;">
+                        <img src="" class="d-inline-block w-100" alt="" id="preview-img" style="max-height: 300px; object-fit: contain;">
+                        <label for="image-upload" id="preview-upload">
+                            <span class="text-dark">
+                                <i class="fas fa-upload py-3" style="font-size: 30px;"></i>
+                            </span>
+                            <div class="py-3">
+                                Select a image or drag here
+                            </div>
+                        </label>
+                    </div>
+                    <label for="Files" class="mt-4 d-flex justify-content-between font-weight-bold btn btn-secondary btn-icon-split btn-block">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-upload"></i>
+                        </span>
+                        <span class="text w-100">Upload product image</span>
+                    </label>
+
+                    <span asp-validation-for="@Model.Files" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-12 mt-2">
+                <button type="submit" class="btn btn-primary btn-block">Add New Product</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="~/admin/js/upload-img.js"></script>
+}
