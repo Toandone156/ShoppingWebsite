@@ -18,6 +18,7 @@ namespace ShoppingWebsite.Models
         public string? Phone { get; set; }
         public string? Address { get; set; }
         public AccountType Type { get; set; }
+        public long? TelegramID { get; set; }
 
         //Relations
         public virtual ICollection<Order>? Orders { get; set; }

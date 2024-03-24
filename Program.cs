@@ -70,6 +70,7 @@ namespace ShoppingWebsite
             });
 
             services.AddScoped<ICookieAuthentication, CookieAuthentication>();
+            services.AddScoped<PartialService>();
 
             services.AddSignalR(e => {
                 e.MaximumReceiveMessageSize = 102400000;

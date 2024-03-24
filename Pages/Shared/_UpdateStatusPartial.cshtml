@@ -1,0 +1,7 @@
+﻿@model ShoppingWebsite.Services.UpdateStatusMessage
+@{
+}
+
+<tg-emoji emoji-id="5368324170671202286">📢</tg-emoji><b> Đơn hàng #@Model.OrderID đã được cập nhật trạng thái @Model.OrderStatus:</b>
+<i>Đặt lúc: <b>@Model.OrderDate.ToString("HH:mm dd/MM/yyyy")</b></i>
+<i>Tổng tiền: <b>@Model.Total.ToString("N0") đ</b></i>

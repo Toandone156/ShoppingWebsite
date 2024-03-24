@@ -351,7 +351,7 @@
     @if (TempData["Message"] != null)
     {
         <script>
-            showToast('@TempData["Message"]');
+            showToast('@Html.Raw(TempData["Message"])');
         </script>
     }
 
@@ -396,6 +396,15 @@
                 window.open(`/call/${guid}`, 'Calling', params);
                 console.log(guid);
             });
+        </script>
+    }
+
+
+
+    @if (TempData["RequiredLogin"] != null)
+    {
+        <script>
+            document.querySelector(".login-btn").click();
         </script>
     }
 

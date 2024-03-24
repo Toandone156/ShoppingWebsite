@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ShoppingWebsite.Data;
 using ShoppingWebsite.Models;
@@ -23,7 +23,8 @@ namespace ShoppingWebsite.Pages.Order
         {
             if (!User.Identity.IsAuthenticated)
             {
-                TempData["Message"] = "Need login first";
+                TempData["Message"] = "Cần đăng nhập trước khi thanh toán";
+                TempData["RequiredLogin"] = true;
                 return Redirect("../index");
             }
 
@@ -31,7 +32,7 @@ namespace ShoppingWebsite.Pages.Order
 
             if(cart == null)
             {
-                TempData["Message"] = "Cart is empty";
+                TempData["Message"] = "Giỏ hàng trống";
                 return RedirectToPage("../index");
             }
 
@@ -70,7 +71,7 @@ namespace ShoppingWebsite.Pages.Order
 
             if (id == null)
             {
-                TempData["Message"] = "Need login first";
+                TempData["Message"] = "Cần đăng nhập trước khi thanh toán";
                 return Redirect("../index");
             }
 

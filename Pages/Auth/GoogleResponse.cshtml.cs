@@ -41,6 +41,11 @@ namespace ShoppingWebsite.Pages.Auth
 
             await _cookie.SignInAsync(user, HttpContext);
 
+            if (SessionService.GetSessionValue<long>(HttpContext, "telegramID") != null)
+            {
+                return RedirectToPage("../AddTelegramNoti");
+            }
+
             return RedirectToPage("../index");
         }
     }
