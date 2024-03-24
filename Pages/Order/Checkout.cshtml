@@ -67,6 +67,7 @@
                             </ul>
                             <ul class="checkout__total__all">
                                 <li id="shipment">Tiền ship <span>0</span></li>
+                                <input asp-for="@Model.ShipAmount" hidden/>
                                 <li>Tổng cộng <span class="total">@total.ToString("N0")</span></li>
                             </ul>
                             <ul class="checkout__total__all d-none" style="border: none;">
@@ -84,11 +85,12 @@
 <!-- Checkout Section End -->
 
 @section Scripts {
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDp2gmZ-AeZB9Z4m8XZDTU4c78tJeDGuK0&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApX4SB0rlR23J1lerMGh_Sd5Z8hR_GNe8&libraries=places"></script>
 
     <script>
         var total = @total;
         var shipmentElement = document.getElementById("shipment");
+        var shipAmountInput = document.getElementById("ShipAmount");
         var totalElement = document.querySelector(".total");
 
         function UpdateTotal(shipamount) {
@@ -96,7 +98,9 @@
         }
 
         function UpdateShipment(shipamount, shiptext) {
+            debugger
             shipmentElement.innerHTML = `Tiền ship (${shiptext}) <span>${(Math.round(shipamount / 1000) * 5000).toLocaleString('en-GB')}</span>`;
+            shipAmountInput.value = Math.round(shipamount / 1000) * 5000;
         }
 
         function initialize() {

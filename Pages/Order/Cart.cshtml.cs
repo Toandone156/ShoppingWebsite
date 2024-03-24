@@ -21,14 +21,7 @@ namespace ShoppingWebsite.Pages.Order
 
         private int TotalAmount()
         {
-            var total = 0;
-
-            foreach(var od in Cart)
-            {
-                total += od.Quantity * od.UnitPrice;
-            }
-
-            return total;
+            return Cart.Sum(d => d.Quantity * d.UnitPrice);
         }
     }
 }

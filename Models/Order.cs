@@ -19,6 +19,7 @@ namespace ShoppingWebsite.Models
         public string ShipAddress { get; set; }
         public string Phone { get; set; }
         public OrderStatus status { get; set; } = OrderStatus.Sent;
+        public int ShipAmount { get; set; } = 0;
 
         //Foreign key
         public int AccountID { get; set; }

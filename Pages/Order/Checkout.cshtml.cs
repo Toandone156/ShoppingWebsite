@@ -65,6 +65,9 @@ namespace ShoppingWebsite.Pages.Order
         [Required]
         public string Phone { get; set; }
 
+        [BindProperty]
+        public int ShipAmount { get; set; } = 0;
+
         public IActionResult OnPost()
         {
             var id = User.FindFirst(c => c.Type == "Id").Value;
@@ -94,40 +97,17 @@ namespace ShoppingWebsite.Pages.Order
                 OrderDate = DateTime.Now,
                 ShipAddress = Address,
                 Phone = Phone,
-                TotalAmount = TotalAmount()
+                ShipAmount = ShipAmount,
+                TotalAmount = TotalAmount() + ShipAmount
             };
 
             SessionService.AddToSession(HttpContext, "cartInfo", order);
-
-            //_context.Orders.Add(order);
-            //_context.SaveChanges();
-
-            //var details = SessionService.GetSessionValue<List<OrderDetail>>(HttpContext, "cart");
-
-            //foreach(var item in details)
-            //{
-            //    item.OrderID = order.OrderID;
-            //    item.Product = null;
-            //    _context.OrderDetails.Add(item);
-            //    _context.SaveChanges();
-            //}
-
-            //SessionService.DeleteSession(HttpContext, "cart");
-
-            //TempData["Message"] = "Order successfully!";
             return Redirect("./payment");
         }
 
         private int TotalAmount()
         {
-            var total = 0;
-
-            foreach (var od in cart)
-            {
-                total += od.Quantity * od.UnitPrice;
-            }
-
-            return total;
+            return cart.Sum(d => d.Quantity * d.UnitPrice);
         }
     }
 }

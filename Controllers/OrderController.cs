@@ -45,7 +45,7 @@ namespace ShoppingWebsite.Controllers
                     OrderID = order.OrderID,
                     OrderStatus = order.status.ToString(),
                     OrderDate = order.OrderDate,
-                    Total = order.Details.Sum(d => d.Quantity * d.UnitPrice)
+                    Total = order.Details.Sum(d => d.Quantity * d.UnitPrice) + order.ShipAmount
                 };
 
                 var sendMessage = await _partialService.RenderPartialToStringAsync("_UpdateStatusPartial", updateStatus);
