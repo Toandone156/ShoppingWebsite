@@ -64,6 +64,7 @@
 <!-- Shop Section End -->
 
 @section Scripts {
+    <script src="https://unpkg.com/diacritic"></script>
     <script>
         $('.add-to-cart-button').click(e => {
             e.preventDefault();
@@ -80,7 +81,7 @@
 
         // Function to filter products
         function filterProducts() {
-            const searchTerm = searchInput.val().toLowerCase().trim();
+            const searchTerm = Diacritics.clean(searchInput.val().toLowerCase().trim());
             const selectedCategoryId = selectCategory.text().toLowerCase().trim();
 
             if (searchTerm == undefined) {
@@ -88,14 +89,14 @@
             }
 
             productItems.each(function () {
-                const productName = $(this).find("h6 a").text().toLowerCase().trim();
+                const productName = $(this).find("h6").text().toLowerCase().trim();
 
                 const categoryId = $(this).data("categoryName").toLowerCase().trim();
 
                 let visible = true;
 
                 // Check for search term match
-                if (searchTerm && !productName.includes(searchTerm)) {
+                if (searchTerm && !Diacritics.clean(productName).includes(searchTerm)) {
                     visible = false;
                 }
 
