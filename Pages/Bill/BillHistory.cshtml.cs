@@ -30,7 +30,7 @@ namespace ShoppingWebsite.Pages.Bill
 
             foreach(var order in MyOrders)
             {
-                order.TotalAmount = TotalAmount(order);
+                order.TotalAmount = TotalAmount(order) + order.ShipAmount;
             }
 
             return Page();

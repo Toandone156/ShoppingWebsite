@@ -29,7 +29,7 @@
         var remainAmount = @Model.amount;
 
         connection.on("ReceiveMoney", (message, amount) => {
-            showToast(`Hệ thống nhận được ${amount} đ`);
+            showToast(`Hệ thống nhận được ${amount.toLocaleString('en-GB')} đ`);
 
             if (amount >= remainAmount) {
                 $(".miss").hide();

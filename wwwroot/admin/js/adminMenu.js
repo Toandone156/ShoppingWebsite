@@ -1,4 +1,4 @@
-let orderSidebar = document.getElementById("order-sidebar");
+﻿let orderSidebar = document.getElementById("order-sidebar");
 let orderSidebarBtn = document.getElementById("order-sidebar-btn");
 let hideOrderElement = document.querySelector("#hideOrder");
 let orderList = document.getElementsByClassName("order-list")[0];
@@ -80,9 +80,9 @@ function AddToCart(event) {
 	if (!isExist) {
 		AddToCartList(productId, productName, productPrice);
 		addToCart(productId, 1);
-		showToast("Add product success");
+		showToast("Sản phẩm được thêm vào giỏ hàng");
 	} else {
-		showToast("Product was exist in cart");
+		showToast("Sản phẩm đã được thêm trước đó");
 	}
 }
 

@@ -58,6 +58,9 @@
                     <li>
                         @User.Identity.Name
                     </li>
+                    <li>
+                        <a href="https://t.me/CakeNotificationBot">Telegram</a>
+                    </li>
                     <li><a href="/auth/logout">Đăng xuất</a></li>
                     @if (IsAdmin)
                     {
@@ -89,6 +92,9 @@
                                     {
                                         <li>
                                             @User.Identity.Name
+                                        </li>
+                                        <li>
+                                            <a href="https://t.me/CakeNotificationBot" target="_blank">Telegram</a>
                                         </li>
                                         <li><a href="/auth/logout">Đăng xuất</a></li>
                                         @if(IsAdmin){
@@ -208,8 +214,8 @@
                     <form id="login" action="/auth/login" method="post">
                         @Html.AntiForgeryToken()
                         <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="text" id="login_email" name="Username" placeholder="Nhập username" required>
+                            <label for="username">Email</label>
+                            <input type="text" id="login_email" name="Username" placeholder="Nhập địa chỉ email" required>
                         </div>
                         <div class="form-group">
                             <label for="password">Mật khẩu</label>
@@ -255,8 +261,8 @@
                     <form id="register" action="/auth/register" method="post">
                         @Html.AntiForgeryToken()
                         <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="text" id="register_email" name="Username" placeholder="Nhập username">
+                            <label for="username">Email</label>
+                            <input type="text" id="register_email" name="Username" placeholder="Nhập địa chỉ email">
                         </div>
                         <div class="form-group">
                             <label for="name">Họ tên</label>

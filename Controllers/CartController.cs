@@ -63,7 +63,7 @@ namespace ShoppingWebsite.Controllers
             }
 
             SessionService.AddToSession(HttpContext, "cart", cart);
-            return "Add product success";
+            return "Sản phẩm đã được thêm vào giỏ hàng";
         }
 
         [Route("GetQRCode")]
